@@ -91,6 +91,7 @@
     <Compile Include="CustomRenderer\HybridWebViewRenderer.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Service\MyDocumentPath.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,6 +123,9 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.4.118</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.91635" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.168-pre" />
   </ItemGroup>

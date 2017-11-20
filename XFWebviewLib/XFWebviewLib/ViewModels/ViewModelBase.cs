@@ -21,6 +21,7 @@ namespace XFWebviewLib.ViewModels
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
+
         }
 
         public virtual void OnNavigatedFrom(NavigationParameters parameters)
