@@ -7,6 +7,7 @@ using XFWebviewLib.Interface;
 using XFWebviewLib.Model;
 using System.Linq;
 using System.Collections.ObjectModel;
+using XFWebviewLib.Infrastructure;
 
 namespace XFWebviewLib.DAO
 {
@@ -19,10 +20,10 @@ namespace XFWebviewLib.DAO
 
         public ContentTemplateDAO()
         {
-            db = DependencyService.Get<IDatabaseConnection>().DbConnection("XFWebviewLib.db3");
+            db = DependencyService.Get<IDatabaseConnection>().DbConnection(AppData.DBName);
             DBPath = db.DatabasePath;
             db.CreateTable<htmltemplate>();
-            this.htmltemplates =    new ObservableCollection<htmltemplate>(db.Table<htmltemplate>());
+            this.htmltemplates = new ObservableCollection<htmltemplate>(db.Table<htmltemplate>());
             // If the table is empty, initialize the collection
             if (!db.Table<htmltemplate>().Any())
             {

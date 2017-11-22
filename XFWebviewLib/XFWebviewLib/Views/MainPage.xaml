@@ -6,7 +6,6 @@
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}">
     <StackLayout>
-        <Label Text="{Binding dbpath }"/>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
