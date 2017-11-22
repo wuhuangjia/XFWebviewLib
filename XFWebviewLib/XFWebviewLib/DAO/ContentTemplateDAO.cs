@@ -39,5 +39,16 @@ namespace XFWebviewLib.DAO
                 htmltemplate_subject = "test",
             });
         }
+
+        public IEnumerable<htmltemplate> GetAllHtmlTemplates()
+        {
+            // Use locks to avoid database collitions
+            lock (collisionLock)
+            {
+                var query = from x in db.Table<htmltemplate>()
+                            select x;
+                return query.AsEnumerable();
+            }
+        }
     }
 }

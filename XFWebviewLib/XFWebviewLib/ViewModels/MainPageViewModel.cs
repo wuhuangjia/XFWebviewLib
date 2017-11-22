@@ -17,6 +17,7 @@ namespace XFWebviewLib.ViewModels
         {
             Title = "Main Page";
             db = new ContentTemplateDAO();
+            var q = db.GetAllHtmlTemplates();
         }
     }
 }
