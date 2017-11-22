@@ -12,6 +12,7 @@ namespace XFWebviewLib.DAO
 {
     public class ContentTemplateDAO
     {
+        public string DBPath { get; set; }
         private SQLiteConnection db;
         private static object collisionLock = new object();
         public ObservableCollection<htmltemplate> htmltemplates { get; set; }
@@ -19,6 +20,7 @@ namespace XFWebviewLib.DAO
         public ContentTemplateDAO()
         {
             db = DependencyService.Get<IDatabaseConnection>().DbConnection("XFWebviewLib.db3");
+            DBPath = db.DatabasePath;
             db.CreateTable<htmltemplate>();
             this.htmltemplates =    new ObservableCollection<htmltemplate>(db.Table<htmltemplate>());
             // If the table is empty, initialize the collection

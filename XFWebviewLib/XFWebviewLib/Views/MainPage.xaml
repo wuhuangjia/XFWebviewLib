@@ -5,11 +5,13 @@
              x:Class="XFWebviewLib.Views.MainPage"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}">
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <local:HybridWebView x:Name="hybridWebView" Uri="http://quasar-framework.org/quasar-play/android/index.html#/showcase" Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
-    </Grid>
+    <StackLayout>
+        <Label Text="{Binding dbpath }"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <local:HybridWebView x:Name="hybridWebView" Uri="http://quasar-framework.org/quasar-play/android/index.html#/showcase" Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
+        </Grid>
+    </StackLayout>
 </ContentPage>

@@ -11,12 +11,14 @@ namespace XFWebviewLib.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+        public string dbpath { get; set; }
         ContentTemplateDAO db;
         public MainPageViewModel(INavigationService navigationService) 
             : base (navigationService)
         {
             Title = "Main Page";
             db = new ContentTemplateDAO();
+            dbpath = $"路徑: {db.DBPath}";
         }
     }
 }
