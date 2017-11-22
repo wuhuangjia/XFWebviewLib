@@ -43,7 +43,8 @@ namespace XFWebviewLib.iOS.CustomRenderer
             {
                 //string fileName = Path.Combine(NSBundle.MainBundle.BundlePath, string.Format("Content/{0}", Element.Uri));
                 string fileName = Element.Uri;
-                Control.LoadRequest(new NSUrlRequest(new NSUrl(fileName, false)));
+                //Control.LoadRequest(new NSUrlRequest(new NSUrl(fileName, false)));
+                Control.LoadRequest(new NSUrlRequest(new NSUrl(fileName)));
             }
         }
 

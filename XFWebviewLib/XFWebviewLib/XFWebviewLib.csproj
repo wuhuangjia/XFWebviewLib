@@ -11,9 +11,4 @@
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.168-pre" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
 </Project>
