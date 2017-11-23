@@ -44,7 +44,7 @@ namespace XFWebviewLib.Droid.CustomRenderer
             base.OnElementChanged(e);
             if (this.Control == null && e.NewElement != null)
             {
-                var webView = new Android.Webkit.WebView(Control.Context);
+                var webView = new Android.Webkit.WebView(Context);
 
                 webView.Settings.JavaScriptEnabled = true;
                 webView.Settings.DomStorageEnabled = true;

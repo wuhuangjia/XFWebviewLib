@@ -78,6 +78,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\DatabaseConnection.cs" />
+    <Compile Include="Service\FloderPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -101,7 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XFWebviewLib\XFWebviewLib.csproj">
-      <Project>{A682884C-CB44-4A89-B752-27BB634E0ABE}</Project>
+      <Project>{0405086B-E9DA-4F8E-B8E8-007352FACFFB}</Project>
       <Name>XFWebviewLib</Name>
     </ProjectReference>
   </ItemGroup>

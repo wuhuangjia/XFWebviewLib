@@ -50,5 +50,13 @@ namespace XFWebviewLib.DAO
                 return query.AsEnumerable();
             }
         }
+
+        public htmltemplate GetHtmltemplateByPK(string PK)
+        {
+            lock (collisionLock)
+            {
+                return db.Table<htmltemplate>().FirstOrDefault(x => x.htmltemplate_id == PK);
+            }
+        }
     }
 }

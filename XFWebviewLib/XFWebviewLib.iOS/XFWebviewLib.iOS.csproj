@@ -97,6 +97,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <ITunesArtwork Include="iTunesArtwork" />
     <ITunesArtwork Include="iTunesArtwork@2x" />
+    <Compile Include="Service\FloderPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -134,7 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XFWebviewLib\XFWebviewLib.csproj">
-      <Project>{A682884C-CB44-4A89-B752-27BB634E0ABE}</Project>
+      <Project>{0405086B-E9DA-4F8E-B8E8-007352FACFFB}</Project>
       <Name>XFWebviewLib</Name>
     </ProjectReference>
   </ItemGroup>
