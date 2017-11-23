@@ -1,16 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:XFWebviewLib.CustomRenderer;assembly=XFWebviewLib"
              x:Class="XFWebviewLib.Views.MainPage"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}">
-    <StackLayout>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <local:HybridWebView x:Name="hybridWebView" Uri="http://quasar-framework.org/quasar-play/android/index.html#/showcase" Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
+            <local:HybridWebView x:Name="hybridWebView" Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
         </Grid>
-    </StackLayout>
 </ContentPage>

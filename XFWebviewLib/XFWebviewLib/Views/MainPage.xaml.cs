@@ -9,9 +9,10 @@ namespace XFWebviewLib.Views
 {
 	public partial class MainPage : ContentPage
 	{
-		public MainPage ()
-		{
-			InitializeComponent ();
-		}
+        public MainPage()
+        {
+            InitializeComponent();
+            this.hybridWebView.Uri = new Uri("http://quasar-framework.org/quasar-play/android/index.html#/showcase");
+        }
 	}
 }
