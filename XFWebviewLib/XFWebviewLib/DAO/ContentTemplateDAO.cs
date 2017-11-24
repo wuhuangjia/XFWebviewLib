@@ -27,20 +27,44 @@ namespace XFWebviewLib.DAO
             // If the table is empty, initialize the collection
             if (!db.Table<htmltemplate>().Any())
             {
-                AddNewTemplate();
+                htmltemplate template = new htmltemplate();
+                template.htmltemplate_id = "1";
+                template.htmltemplate_subject = "test";
+                template.htmltemplate_type = "Home";
+                template.htmltemplate_content = @"<html>
+                <head>
+                    <title>WebView</title>
+                <link rel=""stylesheet"" type=""text/css"" href=""style.css""/>
+                  </head>
+                  <body>
+                  <h1>Xamarin.Forms</h1>
+                  <p>This is a local Html page</p>
+                     <img src=""XamarinLogo.png""/>
+                      </body>
+                      </html>";
+                template.update_date = DateTime.Now;
+                template.create_date = DateTime.Now;
+                this.Create(template);
             }
         }
 
-        private void AddNewTemplate()
+        private int Create(htmltemplate template)
         {
-            this.htmltemplates.Add(new htmltemplate
+            lock (collisionLock)
             {
-                htmltemplate_id = Guid.NewGuid().ToString(),
-                htmltemplate_subject = "test",
-            });
+                return db.Insert(template);
+            }
         }
 
-        public IEnumerable<htmltemplate> GetAllHtmlTemplates()
+        private int Update(htmltemplate template)
+        {
+            lock (collisionLock)
+            {
+                return db.Update(template);
+            }
+        }
+
+        public IEnumerable<htmltemplate> ReadAll()
         {
             // Use locks to avoid database collitions
             lock (collisionLock)
@@ -51,12 +75,21 @@ namespace XFWebviewLib.DAO
             }
         }
 
-        public htmltemplate GetHtmltemplateByPK(string PK)
+        public htmltemplate ReadByPK(string PK)
         {
             lock (collisionLock)
             {
                 return db.Table<htmltemplate>().FirstOrDefault(x => x.htmltemplate_id == PK);
             }
         }
+
+        public int DeleteByPK(string PK)
+        {
+            lock (collisionLock)
+            {
+                return db.Delete<htmltemplate>(PK);
+            }
+        }
+
     }
 }

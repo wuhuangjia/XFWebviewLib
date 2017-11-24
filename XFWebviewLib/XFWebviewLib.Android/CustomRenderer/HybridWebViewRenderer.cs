@@ -58,9 +58,9 @@ namespace XFWebviewLib.Droid.CustomRenderer
 
                 webView.SetWebViewClient(this.GetWebViewClient());
                 webView.SetWebChromeClient(this.GetWebChromeClient());
+                WebView.SetWebContentsDebuggingEnabled(true);
 
                 webView.AddJavascriptInterface(new JSBridge(this), "jsBridge");
-
                 this.SetNativeControl(webView);
 
                 webView.LayoutParameters = new LayoutParams(LayoutParams.MatchParent, LayoutParams.MatchParent);

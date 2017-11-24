@@ -15,10 +15,15 @@ namespace XFWebviewLib.Views
         {
             InitializeComponent();
             _MainPageViewModel = this.BindingContext as MainPageViewModel;
-            var htmlSource = new HtmlWebViewSource();
-            htmlSource.BaseUrl = _MainPageViewModel.Baseurl;
-            htmlSource.Html = _MainPageViewModel.PageTemplate;
-            this.hybridWebView.Source = htmlSource;
         }
-	}
+
+        #region Overrides of Page
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            this.hybridWebView.LoadContent(_MainPageViewModel.PageTemplate, _MainPageViewModel.Baseurl);
+        }
+
+        #endregion
+    }
 }

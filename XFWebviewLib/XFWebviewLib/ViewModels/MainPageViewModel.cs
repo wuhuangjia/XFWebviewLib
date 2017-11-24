@@ -11,6 +11,7 @@ using Xamarin.Forms;
 using XFWebviewLib.Interface;
 using System.IO;
 using XFWebviewLib.Helper;
+using Plugin.DeviceInfo;
 
 namespace XFWebviewLib.ViewModels
 {
@@ -42,15 +43,20 @@ namespace XFWebviewLib.ViewModels
             //1.從後端下載樣板所需要的外部資源，例如：css js 圖檔等，並存到自訂的資料夾 geometry_tmp
             //2.ios 的 wkwebview 需要再將所下載的外部檔案於執行時複製到 tmp 資料夾
 
-            //SaveCss();
-            ReadCss();
+            SaveCss();
+            //ReadCss();
             db = new ContentTemplateDAO();
 
-            //Baseurl = DependencyService.Get<IFloderPath>().GetHtmlBasePath("MySubFolder");
-            //IFolder rootFolder = FileSystem.Current.LocalStorage;
-            Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
+            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
+            {
+                Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
+            }
+            else
+            {
+                Baseurl = $"file://{DependencyService.Get<IFloderPath>().GetPath(Environment.SpecialFolder.Personal, "MySubFolder")}/";
+            }
 
-            var htmltemplateObj = db.GetHtmltemplateByPK("1");
+            var htmltemplateObj = db.ReadByPK("1");
             if (htmltemplateObj != null)
             {
                 PageTemplate = htmltemplateObj.htmltemplate_content;
@@ -62,8 +68,16 @@ namespace XFWebviewLib.ViewModels
             IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",CreationCollisionOption.OpenIfExists);
             IFile file = await folder.CreateFileAsync("style.css",CreationCollisionOption.ReplaceExisting);
-            var strcss = "html,body {color:red;}";
+            var strcss = "html,body {color:green;}";
             await file.WriteAllTextAsync(strcss);
+            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
+            {
+                string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
+                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
+                PCLStorageExtensions.CopyFileTo(file, targetfloder);
+            }
+
+
         }
 
         async void ReadCss()
