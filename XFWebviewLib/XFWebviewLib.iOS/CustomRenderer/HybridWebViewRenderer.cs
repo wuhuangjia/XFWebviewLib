@@ -110,7 +110,7 @@ namespace XFWebviewLib.iOS.CustomRenderer
             var baseUri = contentArgs.BaseUri ?? GetTempDirectory();
             Element.Uri = new Uri(baseUri + "/" + contentArgs.Content);
             //Element.Uri = new Uri(NSBundle.MainBundle.BundlePath + "/" + contentFullName);
-            //Control.LoadHtmlString(new NSString(contentFullName), new NSUrl(NSBundle.MainBundle.BundlePath, true));
+            Control.LoadFileUrl(new NSUrl(Element.Uri.ToString()), new NSUrl(baseUri, true));
         }
 
          void LoadContent(object sender, HybridWebView.LoadContentEventArgs contentArgs)

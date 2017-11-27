@@ -41,7 +41,7 @@ namespace XFWebviewLib.ViewModels
             : base(navigationService)
         {
             Title = "Main Page";
-            SaveCss();
+            //SaveCss();
         }
 
         async void  SaveCss()
@@ -69,6 +69,7 @@ namespace XFWebviewLib.ViewModels
                 string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
                 IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
                 PCLStorageExtensions.CopyFileTo(file, targetfloder);
+                PCLStorageExtensions.CopyFileTo(htmlfile, targetfloder);
             }
 
             //await NavigationService.NavigateAsync("ShowTestHtmlPage");
@@ -94,6 +95,8 @@ namespace XFWebviewLib.ViewModels
             //SaveCss();
 
             //ReadCss();
+
+
             db = new ContentTemplateDAO();
 
             if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
@@ -110,6 +113,7 @@ namespace XFWebviewLib.ViewModels
             {
                 PageTemplate = htmltemplateObj.htmltemplate_content;
             }
+
 
         }
 
