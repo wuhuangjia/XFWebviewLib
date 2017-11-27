@@ -4,6 +4,7 @@ using Microsoft.Practices.Unity;
 using Prism.Unity;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XFWebviewLib.CustomRenderer;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace XFWebviewLib
@@ -30,7 +31,6 @@ namespace XFWebviewLib
         {
             Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
-            Container.RegisterTypeForNavigation<ShowTestHtmlPage>();
         }
     }
 }

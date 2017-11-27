@@ -11,7 +11,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-        <local:HybridWebView x:Name="hybridWebView" Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <local:HybridWebView x:Name="hybridWebView" Uri="{Binding hwv}" Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         </local:HybridWebView>
     </Grid>
 </ContentPage>

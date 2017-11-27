@@ -12,6 +12,7 @@ using XFWebviewLib.Interface;
 using System.IO;
 using XFWebviewLib.Helper;
 using Plugin.DeviceInfo;
+using XFWebviewLib.CustomRenderer;
 
 namespace XFWebviewLib.ViewModels
 {
@@ -34,32 +35,12 @@ namespace XFWebviewLib.ViewModels
             get;
             set;
         }
-
         #endregion
 
         public MainPageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             Title = "Main Page";
-            SaveCss();
-        }
-
-        async void  SaveCss()
-        {
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",CreationCollisionOption.OpenIfExists);
-            IFile file = await folder.CreateFileAsync("style.css",CreationCollisionOption.ReplaceExisting);
-            var strcss = "html,body {color:green;}";
-            await file.WriteAllTextAsync(strcss);
-
-            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
-            {
-                string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
-                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-                PCLStorageExtensions.CopyFileTo(file, targetfloder);
-            }
-
-            //await NavigationService.NavigateAsync("ShowTestHtmlPage");
         }
 
         async void ReadCss()
@@ -82,8 +63,6 @@ namespace XFWebviewLib.ViewModels
             //SaveCss();
 
             //ReadCss();
-
-
             db = new ContentTemplateDAO();
 
             if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
@@ -100,8 +79,6 @@ namespace XFWebviewLib.ViewModels
             {
                 PageTemplate = htmltemplateObj.htmltemplate_content;
             }
-
-
         }
 
     }
