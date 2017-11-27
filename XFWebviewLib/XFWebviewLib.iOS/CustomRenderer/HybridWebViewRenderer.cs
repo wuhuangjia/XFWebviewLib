@@ -105,21 +105,20 @@ namespace XFWebviewLib.iOS.CustomRenderer
             }
         }
 
-         void LoadFromContent(object sender, HybridWebView.LoadContentEventArgs contentArgs)
+        void LoadFromContent(object sender, HybridWebView.LoadContentEventArgs contentArgs)
         {
             var baseUri = contentArgs.BaseUri ?? GetTempDirectory();
             Element.Uri = new Uri(baseUri + "/" + contentArgs.Content);
             //Element.Uri = new Uri(NSBundle.MainBundle.BundlePath + "/" + contentFullName);
-            Control.LoadFileUrl(new NSUrl(Element.Uri.ToString()), new NSUrl(baseUri, true));
         }
 
-         void LoadContent(object sender, HybridWebView.LoadContentEventArgs contentArgs)
+        void LoadContent(object sender, HybridWebView.LoadContentEventArgs contentArgs)
         {
             var baseUri = contentArgs.BaseUri ?? GetTempDirectory();
             Control.LoadHtmlString(new NSString(contentArgs.Content), new NSUrl(baseUri, true));
         }
 
-         void LoadFromString(string html)
+        void LoadFromString(string html)
         {
             LoadContent(null, new HybridWebView.LoadContentEventArgs(html, null));
         }

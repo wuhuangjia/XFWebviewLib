@@ -41,7 +41,7 @@ namespace XFWebviewLib.ViewModels
             : base(navigationService)
         {
             Title = "Main Page";
-            //SaveCss();
+            SaveCss();
         }
 
         async void  SaveCss()
@@ -51,25 +51,12 @@ namespace XFWebviewLib.ViewModels
             IFile file = await folder.CreateFileAsync("style.css",CreationCollisionOption.ReplaceExisting);
             var strcss = "html,body {color:green;}";
             await file.WriteAllTextAsync(strcss);
-            IFile htmlfile = await folder.CreateFileAsync("test.html",CreationCollisionOption.ReplaceExisting);
-            var html = @"<html>
-                <head>
-                    <title>WebView</title>
-                <link rel=""stylesheet"" type=""text/css"" href=""style.css""/>
-                  </head>
-                  <body>
-                  <h1>Xamarin.Forms</h1>
-                  <p>This is a local Html page</p>
-                     <img src=""XamarinLogo.png""/>
-                      </body>
-                      </html>";
-            await htmlfile.WriteAllTextAsync(html);
+
             if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
             {
                 string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
                 IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
                 PCLStorageExtensions.CopyFileTo(file, targetfloder);
-                PCLStorageExtensions.CopyFileTo(htmlfile, targetfloder);
             }
 
             //await NavigationService.NavigateAsync("ShowTestHtmlPage");
