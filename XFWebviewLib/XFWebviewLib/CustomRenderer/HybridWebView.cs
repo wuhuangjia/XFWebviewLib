@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
+using XFWebviewLib.Helper;
 
 namespace XFWebviewLib.CustomRenderer
 {
@@ -73,6 +74,11 @@ namespace XFWebviewLib.CustomRenderer
         /// The load finished
         /// </summary>
         public EventHandler LoadFinished;
+
+        /// <summary>
+        /// The navigating
+        /// </summary>
+        public EventHandler<EventArgs<Uri>> Navigating;
 
         /// <summary>
         /// The inject lock.
@@ -165,6 +171,15 @@ namespace XFWebviewLib.CustomRenderer
         public void OnLoadFinished(object sender, EventArgs e)
         {
             this.LoadFinished?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Called when [navigating].
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        public void OnNavigating(Uri uri)
+        {
+            this.Navigating?.Invoke(this, new EventArgs<Uri>(uri));
         }
 
         public class LoadContentEventArgs : EventArgs

@@ -21,7 +21,7 @@ namespace XFWebviewLib.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            this.hybridWebView.LoadContent(_MainPageViewModel.PageTemplate, _MainPageViewModel.Baseurl);
+            this.hybridWebView.LoadFromContent("test.html", _MainPageViewModel.Baseurl);
         }
 
         #endregion

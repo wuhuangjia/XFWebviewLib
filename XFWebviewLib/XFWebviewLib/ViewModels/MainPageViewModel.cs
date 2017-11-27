@@ -34,16 +34,65 @@ namespace XFWebviewLib.ViewModels
             get;
             set;
         }
+
         #endregion
 
         public MainPageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             Title = "Main Page";
+            SaveCss();
+        }
+
+        async void  SaveCss()
+        {
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
+            IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",CreationCollisionOption.OpenIfExists);
+            IFile file = await folder.CreateFileAsync("style.css",CreationCollisionOption.ReplaceExisting);
+            var strcss = "html,body {color:green;}";
+            await file.WriteAllTextAsync(strcss);
+            IFile htmlfile = await folder.CreateFileAsync("test.html",CreationCollisionOption.ReplaceExisting);
+            var html = @"<html>
+                <head>
+                    <title>WebView</title>
+                <link rel=""stylesheet"" type=""text/css"" href=""style.css""/>
+                  </head>
+                  <body>
+                  <h1>Xamarin.Forms</h1>
+                  <p>This is a local Html page</p>
+                     <img src=""XamarinLogo.png""/>
+                      </body>
+                      </html>";
+            await htmlfile.WriteAllTextAsync(html);
+            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
+            {
+                string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
+                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
+                PCLStorageExtensions.CopyFileTo(file, targetfloder);
+            }
+
+            //await NavigationService.NavigateAsync("ShowTestHtmlPage");
+        }
+
+        async void ReadCss()
+        {
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
+            IFile sourceFile = await FileSystem.Current.GetFileFromPathAsync(Path.Combine(rootFolder.Path, "MySubFolder", "style.css"));
+            string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
+            IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
+            PCLStorageExtensions.CopyFileTo(sourceFile, targetfloder);
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+        }
+
+        public override void OnNavigatingTo(NavigationParameters parameters)
+        {
             //1.從後端下載樣板所需要的外部資源，例如：css js 圖檔等，並存到自訂的資料夾 geometry_tmp
             //2.ios 的 wkwebview 需要再將所下載的外部檔案於執行時複製到 tmp 資料夾
+            //SaveCss();
 
-            SaveCss();
             //ReadCss();
             db = new ContentTemplateDAO();
 
@@ -61,32 +110,8 @@ namespace XFWebviewLib.ViewModels
             {
                 PageTemplate = htmltemplateObj.htmltemplate_content;
             }
-        }
-
-        async void  SaveCss()
-        {
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder",CreationCollisionOption.OpenIfExists);
-            IFile file = await folder.CreateFileAsync("style.css",CreationCollisionOption.ReplaceExisting);
-            var strcss = "html,body {color:green;}";
-            await file.WriteAllTextAsync(strcss);
-            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
-            {
-                string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
-                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-                PCLStorageExtensions.CopyFileTo(file, targetfloder);
-            }
-
 
         }
 
-        async void ReadCss()
-        {
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFile sourceFile = await FileSystem.Current.GetFileFromPathAsync(Path.Combine(rootFolder.Path, "MySubFolder", "style.css"));
-            string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
-            IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-            PCLStorageExtensions.CopyFileTo(sourceFile, targetfloder);
-        }
     }
 }
