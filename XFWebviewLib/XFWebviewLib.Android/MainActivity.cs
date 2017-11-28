@@ -1,8 +1,11 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Microsoft.Practices.Unity;
+using Plugin.Permissions;
 using Prism.Unity;
+using Xam.Plugin.WebView.Droid;
 
 namespace XFWebviewLib.Droid
 {
@@ -15,10 +18,19 @@ namespace XFWebviewLib.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
-
+            FormsWebViewRenderer.Initialize();
+            UserDialogs.Init(this);
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
+
         }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
     }
 
     public class AndroidInitializer : IPlatformInitializer

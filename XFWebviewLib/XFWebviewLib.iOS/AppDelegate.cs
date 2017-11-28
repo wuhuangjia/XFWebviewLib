@@ -2,6 +2,7 @@
 using UIKit;
 using Microsoft.Practices.Unity;
 using Prism.Unity;
+using Xam.Plugin.WebView.iOS;
 
 namespace XFWebviewLib.iOS
 {
@@ -20,6 +21,7 @@ namespace XFWebviewLib.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            FormsWebViewRenderer.Initialize();
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App(new iOSInitializer()));
 

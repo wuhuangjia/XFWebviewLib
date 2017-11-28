@@ -12,15 +12,19 @@ using XFWebviewLib.Interface;
 using System.IO;
 using XFWebviewLib.Helper;
 using Plugin.DeviceInfo;
-using XFWebviewLib.CustomRenderer;
+using System.Threading.Tasks;
+using System.Net.Http;
+using XFWebviewLib.Infrastructure;
+using Acr.UserDialogs;
+using XFWebviewLib.Model;
 
 namespace XFWebviewLib.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
         #region fields
-        ContentTemplateDAO db;
-
+        AppFunDAO db;
+        appfunc _appfunc;
         #endregion
 
         #region Propertys
@@ -35,6 +39,23 @@ namespace XFWebviewLib.ViewModels
             get;
             set;
         }
+
+        public appfunc AppFuncObj
+        {
+            get
+            {
+                if (_appfunc == null)
+                {
+                    _appfunc = new appfunc();
+                }
+                return _appfunc;
+            }
+            set
+            {
+                _appfunc = value;
+            }
+        }
+
         #endregion
 
         public MainPageViewModel(INavigationService navigationService)
@@ -43,42 +64,78 @@ namespace XFWebviewLib.ViewModels
             Title = "Main Page";
         }
 
-        async void ReadCss()
+        public async void DownloadAppFuncFileAsync(string FloderName, string MutiFileName)
         {
+            var listfile = new List<string>(MutiFileName.Split(','));
+
             IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFile sourceFile = await FileSystem.Current.GetFileFromPathAsync(Path.Combine(rootFolder.Path, "MySubFolder", "style.css"));
-            string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
-            IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-            PCLStorageExtensions.CopyFileTo(sourceFile, targetfloder);
+            IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
+            listfile.ForEach(async filename =>
+            {
+                IFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+
+                using (var fooFileStream = await file.OpenAsync(PCLStorage.FileAccess.ReadAndWrite))
+                {
+                    using (HttpClientHandler handle = new HttpClientHandler())
+                    {
+                        // 建立 HttpClient 物件
+                        using (HttpClient client = new HttpClient(handle))
+                        {
+                            // 取得指定 URL 的 Stream
+                            var url = $"{AppData.WebBaseUrl}files/appfunc_id/{FloderName}/{filename}";
+                            using (var fooStream = await client.GetStreamAsync(url))
+                            {
+                                // 將網路的檔案 Stream 複製到本機檔案上
+                                fooStream.CopyTo(fooFileStream);
+                            }
+                        }
+                    }
+                }
+            });
+
+        }
+
+        public async void InitAppfuncHtmlAsync(string FloderName, string PageFileName, string MutiFileName)
+        {
+            var listfile = new List<string>(MutiFileName.Split(','));
+
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
+            IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
+
+            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
+            {
+                listfile.ForEach(async filename =>
+                {
+                    IFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+                    string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
+                    IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
+                    PCLStorageExtensions.CopyFileTo(file, targetfloder);
+                });
+            }
+
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
-        {
+        {           
+
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            //1.從後端下載樣板所需要的外部資源，例如：css js 圖檔等，並存到自訂的資料夾 geometry_tmp
-            //2.ios 的 wkwebview 需要再將所下載的外部檔案於執行時複製到 tmp 資料夾
-            //SaveCss();
-
-            //ReadCss();
-            db = new ContentTemplateDAO();
-
+            //讀取資料庫
+            db = new AppFunDAO();
+            //取出首頁
+            AppFuncObj = db.ReadByName("首頁");
             if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
             {
                 Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
             }
             else
             {
-                Baseurl = $"file://{DependencyService.Get<IFloderPath>().GetPath(Environment.SpecialFolder.Personal, "MySubFolder")}/";
+                Baseurl = $"file://{DependencyService.Get<IFloderPath>().GetPath(Environment.SpecialFolder.Personal, AppFuncObj.appfunc_id)}/";
+
             }
 
-            var htmltemplateObj = db.ReadByPK("1");
-            if (htmltemplateObj != null)
-            {
-                PageTemplate = htmltemplateObj.htmltemplate_content;
-            }
         }
 
     }

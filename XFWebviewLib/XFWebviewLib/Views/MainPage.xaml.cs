@@ -22,23 +22,14 @@ namespace XFWebviewLib.Views
         }
 
         #region Overrides of Page
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync("MySubFolder", CreationCollisionOption.OpenIfExists);
-            IFile file = await folder.CreateFileAsync("style.css", CreationCollisionOption.ReplaceExisting);
-            var strcss = "html,body {color:green;}";
-            await file.WriteAllTextAsync(strcss);
+            //_MainPageViewModel. DownloadAppFuncFileAsync(_MainPageViewModel.AppFuncObj.appfunc_id, _MainPageViewModel.AppFuncObj.appfunc_files);
+            _MainPageViewModel. InitAppfuncHtmlAsync(_MainPageViewModel.AppFuncObj.appfunc_id, _MainPageViewModel.AppFuncObj.appfunc_url, _MainPageViewModel.AppFuncObj.appfunc_files);
 
-            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
-            {
-                string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
-                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-                PCLStorageExtensions.CopyFileTo(file, targetfloder);
-            }
-
-            this.hybridWebView.LoadContent(_MainPageViewModel.PageTemplate, _MainPageViewModel.Baseurl);
+            this.hybridWebView.BaseUrl= _MainPageViewModel.Baseurl;
+            this.hybridWebView.Source = _MainPageViewModel.AppFuncObj.appfunc_url;
         }
 
         #endregion
