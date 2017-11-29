@@ -24,6 +24,7 @@ namespace XFWebviewLib.ViewModels
     {
         #region fields
         appfunc _appfunc;
+        AppFunDAO _appfunc_db;
         #endregion
 
         #region Propertys
@@ -54,6 +55,21 @@ namespace XFWebviewLib.ViewModels
                 _appfunc = value;
             }
         }
+
+
+        public AppFunDAO appfunc_db
+        {
+            get
+            {
+                if (_appfunc_db == null)
+                {
+                    _appfunc_db = new AppFunDAO();
+                }
+                return _appfunc_db;
+            }
+            set { _appfunc_db = value; }
+        }
+
 
         #endregion
 
@@ -95,14 +111,8 @@ namespace XFWebviewLib.ViewModels
 
         }
 
-        public async void InitAppfuncHtmlAsync(string FuncName)
+        public async void InitAppfuncHtmlAsync()
         {
-            //讀取資料庫
-            var db = new AppFunDAO();
-            AppFuncObj = db.ReadByName(FuncName);
-
-            var listfile = new List<string>(AppFuncObj.appfunc_files.Split(','));
-
             IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync(AppFuncObj.appfunc_id, CreationCollisionOption.OpenIfExists);
 
@@ -127,7 +137,12 @@ namespace XFWebviewLib.ViewModels
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
-            InitAppfuncHtmlAsync("首頁");
+            using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
+            {
+                AppFuncObj = appfunc_db.ReadByName("首頁");
+
+                InitAppfuncHtmlAsync();
+            }
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
