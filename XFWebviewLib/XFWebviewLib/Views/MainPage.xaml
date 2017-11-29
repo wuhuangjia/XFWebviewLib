@@ -1,24 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" 
-             xmlns:webview="clr-namespace:Xam.Plugin.WebView.Abstractions;assembly=Xam.Plugin.WebView.Abstractions"
-             prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="XFWebviewLib.Views.MainPage"
-             NavigationPage.HasNavigationBar="False"
-             Title="{Binding Title}">
-        <Grid>
+<ContentPage
+    x:Class="XFWebviewLib.Views.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+    xmlns:webview="clr-namespace:Xam.Plugin.WebView.Abstractions;assembly=Xam.Plugin.WebView.Abstractions"
+    Title="{Binding Title}"
+    prism:ViewModelLocator.AutowireViewModel="True"
+    NavigationPage.HasNavigationBar="False">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
-        <StackLayout Grid.Row="0" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="Cyan">
-            <Label Text="頁首"/>
+        <StackLayout
+            Grid.Row="0"
+            BackgroundColor="Cyan"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand">
+            <Label Text="頁首" />
         </StackLayout>
-        <webview:FormsWebView x:Name="hybridWebView" ContentType="LocalFile" Grid.Row="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
-        <StackLayout Grid.Row="2" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="Cyan">
-            <Label Text="頁尾"/>
+        <webview:FormsWebView
+            x:Name="hybridWebView"
+            Grid.Row="1"
+            BaseUrl="{Binding Baseurl}"
+            ContentType="StringData"
+            HorizontalOptions="FillAndExpand"
+            Source="{Binding PageTemplate}"
+            VerticalOptions="FillAndExpand" />
+        <StackLayout
+            Grid.Row="2"
+            BackgroundColor="Cyan"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand">
+            <Label Text="頁尾" />
         </StackLayout>
     </Grid>
 </ContentPage>

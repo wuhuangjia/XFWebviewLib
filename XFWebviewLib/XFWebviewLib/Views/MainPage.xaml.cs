@@ -25,11 +25,6 @@ namespace XFWebviewLib.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            //_MainPageViewModel. DownloadAppFuncFileAsync(_MainPageViewModel.AppFuncObj.appfunc_id, _MainPageViewModel.AppFuncObj.appfunc_files);
-            _MainPageViewModel. InitAppfuncHtmlAsync(_MainPageViewModel.AppFuncObj.appfunc_id, _MainPageViewModel.AppFuncObj.appfunc_url, _MainPageViewModel.AppFuncObj.appfunc_files);
-
-            this.hybridWebView.BaseUrl= _MainPageViewModel.Baseurl;
-            this.hybridWebView.Source = _MainPageViewModel.AppFuncObj.appfunc_url;
         }
 
         #endregion

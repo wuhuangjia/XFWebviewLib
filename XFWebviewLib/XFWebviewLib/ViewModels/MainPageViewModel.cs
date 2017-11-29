@@ -23,7 +23,6 @@ namespace XFWebviewLib.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         #region fields
-        AppFunDAO db;
         appfunc _appfunc;
         #endregion
 
@@ -70,6 +69,7 @@ namespace XFWebviewLib.ViewModels
 
             IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
+
             listfile.ForEach(async filename =>
             {
                 IFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
@@ -86,7 +86,7 @@ namespace XFWebviewLib.ViewModels
                             using (var fooStream = await client.GetStreamAsync(url))
                             {
                                 // 將網路的檔案 Stream 複製到本機檔案上
-                                fooStream.CopyTo(fooFileStream);
+                                    fooStream.CopyTo(fooFileStream);
                             }
                         }
                     }
@@ -95,15 +95,20 @@ namespace XFWebviewLib.ViewModels
 
         }
 
-        public async void InitAppfuncHtmlAsync(string FloderName, string PageFileName, string MutiFileName)
+        public async void InitAppfuncHtmlAsync(string FuncName)
         {
-            var listfile = new List<string>(MutiFileName.Split(','));
+            //讀取資料庫
+            var db = new AppFunDAO();
+            AppFuncObj = db.ReadByName(FuncName);
+
+            var listfile = new List<string>(AppFuncObj.appfunc_files.Split(','));
 
             IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
+            IFolder folder = await rootFolder.CreateFolderAsync(AppFuncObj.appfunc_id, CreationCollisionOption.OpenIfExists);
 
             if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
             {
+                Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
                 listfile.ForEach(async filename =>
                 {
                     IFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
@@ -112,30 +117,21 @@ namespace XFWebviewLib.ViewModels
                     PCLStorageExtensions.CopyFileTo(file, targetfloder);
                 });
             }
+            else
+            {
+                Baseurl = $"file://{DependencyService.Get<IFloderPath>().GetPath(Environment.SpecialFolder.Personal, AppFuncObj.appfunc_id)}/";
+            }
+            PageTemplate = await Utilities.ReadFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_url);
 
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
-        {           
-
+        {
+            InitAppfuncHtmlAsync("首頁");
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            //讀取資料庫
-            db = new AppFunDAO();
-            //取出首頁
-            AppFuncObj = db.ReadByName("首頁");
-            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
-            {
-                Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
-            }
-            else
-            {
-                Baseurl = $"file://{DependencyService.Get<IFloderPath>().GetPath(Environment.SpecialFolder.Personal, AppFuncObj.appfunc_id)}/";
-
-            }
-
         }
 
     }
