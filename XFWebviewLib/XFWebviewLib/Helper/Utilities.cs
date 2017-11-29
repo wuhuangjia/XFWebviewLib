@@ -89,11 +89,13 @@ namespace XFWebviewLib.Helper
             string result = string.Empty;
             IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
-            IFile file = await folder.CreateFileAsync(FileName, CreationCollisionOption.OpenIfExists);
-            using (var reader = new StreamReader(await file.OpenAsync(PCLStorage.FileAccess.ReadAndWrite)))
+            var e = await folder.CheckExistsAsync(FileName);
+            if (e == ExistenceCheckResult.FileExists) 
             {
-                result = reader.ReadToEnd();
+                IFile file = await folder.GetFileAsync(FileName);
+                result = await file.ReadAllTextAsync();
             }
+
             return result;
         }
         #endregion

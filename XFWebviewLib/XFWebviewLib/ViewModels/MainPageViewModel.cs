@@ -109,12 +109,12 @@ namespace XFWebviewLib.ViewModels
             if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
             {
                 Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
-                listfile.ForEach(async filename =>
+                var flist = folder.GetFilesAsync();
+                string tmppath = Baseurl;
+                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
+                flist.Result.ToList().ForEach( f =>
                 {
-                    IFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
-                    string tmppath = DependencyService.Get<IFloderPath>().GetTempDirectory();
-                    IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-                    PCLStorageExtensions.CopyFileTo(file, targetfloder);
+                    PCLStorageExtensions.CopyFileTo(f, targetfloder);
                 });
             }
             else

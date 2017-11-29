@@ -21,7 +21,8 @@ namespace XFWebviewLib.iOS.Service
 
         public string GetTempDirectory()
         {
-            return Environment.GetFolderPath(Environment.SpecialFolder.Personal).Replace("Documents", "tmp");
+            var tmp = $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal).Replace("Documents", "tmp")}/";
+            return tmp;
         }
     }
 }
