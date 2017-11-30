@@ -1,27 +1,24 @@
-﻿using Prism.Commands;
+﻿using Acr.UserDialogs;
+using PCLStorage;
+using Plugin.DeviceInfo;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using XFWebviewLib.DAO;
-using PCLStorage;
-using Xamarin.Forms;
-using XFWebviewLib.Interface;
-using System.IO;
-using XFWebviewLib.Helper;
-using Plugin.DeviceInfo;
-using System.Threading.Tasks;
 using System.Net.Http;
+using Xamarin.Forms;
+using XFWebviewLib.DAO;
+using XFWebviewLib.Helper;
 using XFWebviewLib.Infrastructure;
-using Acr.UserDialogs;
+using XFWebviewLib.Interface;
 using XFWebviewLib.Model;
 
 namespace XFWebviewLib.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase
-    {
+	public class test2PageViewModel : ViewModelBase
+	{
         #region fields
         appfunc _appfunc;
         AppFunDAO _appfunc_db;
@@ -93,7 +90,7 @@ namespace XFWebviewLib.ViewModels
         }
         #endregion
 
-        public MainPageViewModel(INavigationService navigationService)
+        public test2PageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             Title = "Main Page";
@@ -124,7 +121,7 @@ namespace XFWebviewLib.ViewModels
                             using (var fooStream = await client.GetStreamAsync(url))
                             {
                                 // 將網路的檔案 Stream 複製到本機檔案上
-                                    fooStream.CopyTo(fooFileStream);
+                                fooStream.CopyTo(fooFileStream);
                             }
                         }
                     }
@@ -144,7 +141,7 @@ namespace XFWebviewLib.ViewModels
                 var flist = folder.GetFilesAsync();
                 string tmppath = Baseurl;
                 IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-                flist.Result.ToList().ForEach( f =>
+                flist.Result.ToList().ForEach(f =>
                 {
                     PCLStorageExtensions.CopyFileTo(f, targetfloder);
                 });
@@ -170,6 +167,5 @@ namespace XFWebviewLib.ViewModels
         {
             //DownloadAppFuncFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_files);
         }
-
     }
 }

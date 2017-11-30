@@ -30,6 +30,7 @@ namespace XFWebviewLib
         {
             Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
+            Container.RegisterTypeForNavigation<test2Page>();
         }
     }
 }

@@ -19,7 +19,15 @@ namespace XFWebviewLib.Views
         {
             InitializeComponent();
             _MainPageViewModel = this.BindingContext as MainPageViewModel;
+            this.hybridWebView.AddLocalCallback("navitotest2", navitotest2);
         }
+
+        void  navitotest2(string obj)
+        {
+            ((NavigationPage)Application.Current.MainPage).PushAsync(new test2Page());
+            //_MainPageViewModel.Navitotest2Command.Execute();
+        }
+
 
         #region Overrides of Page
         protected override void OnAppearing()
