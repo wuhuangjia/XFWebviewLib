@@ -28,6 +28,7 @@ namespace XFWebviewLib.Views
 
         void  navitotest2(string obj)
         {
+            _MainPageViewModel.NaviUrl = "test2Page";
             Device.BeginInvokeOnMainThread(() =>
             {
                 _MainPageViewModel.Navitotest2Command.CheckBeginExecute();

@@ -91,9 +91,11 @@ namespace XFWebviewLib.Helper
             IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
             var e = await folder.CheckExistsAsync(FileName);
-            if (e == ExistenceCheckResult.FileExists) 
+            if (e == ExistenceCheckResult.FileExists)
             {
+
                 IFile file = await folder.GetFileAsync(FileName);
+                FileInfo finfo = new FileInfo(file.Path);
                 result = await file.ReadAllTextAsync();
             }
 

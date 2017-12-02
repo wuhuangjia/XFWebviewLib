@@ -72,7 +72,7 @@ namespace XFWebviewLib.ViewModels
             set { _appfunc_db = value; }
         }
 
-
+        public string NaviUrl { get; set; }
         #endregion
 
         #region Command
@@ -84,7 +84,7 @@ namespace XFWebviewLib.ViewModels
         {
             try
             {
-                await NavigationService.NavigateAsync("test2Page");
+                await NavigationService.NavigateAsync(NaviUrl);
 
             }
             catch (Exception ex)
@@ -121,7 +121,8 @@ namespace XFWebviewLib.ViewModels
                         using (HttpClient client = new HttpClient(handle))
                         {
                             // 取得指定 URL 的 Stream
-                            var url = $"{AppData.WebBaseUrl}files/appfunc_id/{FloderName}/{filename}";
+                            //var url = $"{AppData.WebBaseUrl}files/appfunc_id/{FloderName}/{filename}";
+                            var url = "https://card.tycg.gov.tw/ap_mobile/index.aspx";
                             using (var fooStream = await client.GetStreamAsync(url))
                             {
                                 // 將網路的檔案 Stream 複製到本機檔案上
@@ -146,7 +147,7 @@ namespace XFWebviewLib.ViewModels
                 string tmppath = Baseurl;
                 IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
                 flist.Result.ToList().ForEach( f =>
-                {
+                {                    
                     PCLStorageExtensions.CopyFileTo(f, targetfloder);
                 });
             }
