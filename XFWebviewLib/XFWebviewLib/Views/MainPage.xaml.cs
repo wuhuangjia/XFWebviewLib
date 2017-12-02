@@ -28,27 +28,11 @@ namespace XFWebviewLib.Views
 
         void  navitotest2(string obj)
         {
-            //((NavigationPage)Application.Current.MainPage).PushAsync(new test2Page());
-            //_MainPageViewModel.Navitotest2Command.Execute();
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                _MainPageViewModel.Navitotest2Command.CheckBeginExecute();
+            });
 
-            _ea.GetEvent<WebViewtoVmEvent>().Publish(new WebViewtoVmEventArgs("test2Page"));
         }
-
-        //protected override void OnAppearing()
-        //{
-        //    _ea.GetEvent<MapMoveEvent>();
-        //    _ea.GetEvent<AddSediToMapEvent>().Subscribe(collection => AddSediToMap(collection));
-
-        //    base.OnAppearing();
-        //}
-
-        //protected override void OnDisappearing()
-        //{
-        //    _ea.GetEvent<AddSediToMapEvent>().Unsubscribe(null);
-        //    _ea.GetEvent<MapMoveEvent>().Unsubscribe(null);
-
-        //    base.OnDisappearing();
-        //}
-
     }
 }

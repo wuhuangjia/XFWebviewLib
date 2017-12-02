@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace XFWebviewLib.Helper
@@ -97,6 +98,28 @@ namespace XFWebviewLib.Helper
             }
 
             return result;
+        }
+        #endregion
+
+        #region 手動執行某個command
+        public static bool CheckBeginExecute(this ICommand command)
+        {
+            return CheckBeginExecuteCommand(command);
+        }
+
+        public static bool CheckBeginExecuteCommand(ICommand command)
+        {
+            var canExecute = false;
+            lock (command)
+            {
+                canExecute = command.CanExecute(null);
+                if (canExecute)
+                {
+                    command.Execute(null);
+                }
+            }
+
+            return canExecute;
         }
         #endregion
 

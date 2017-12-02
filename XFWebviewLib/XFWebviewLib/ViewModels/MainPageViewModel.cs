@@ -95,31 +95,11 @@ namespace XFWebviewLib.ViewModels
         }
         #endregion
 
-        public MainPageViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
+        public MainPageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             Title = "Main Page";
             AppFuncObj = appfunc_db.ReadByName("首頁");
-            _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<WebViewtoVmEvent>().Subscribe(x =>
-            {
-                if (!string.IsNullOrEmpty(x.Message))
-                {
-                    try
-                    {
-                        Device.BeginInvokeOnMainThread(async () =>
-                        {
-                            await NavigationService.NavigateAsync("test2Page");
-                        });
-
-                    }
-                    catch (Exception ex)
-                    {
-
-                        throw;
-                    }
-                }
-            });
         }
 
         public async void DownloadAppFuncFileAsync(string FloderName, string MutiFileName)
