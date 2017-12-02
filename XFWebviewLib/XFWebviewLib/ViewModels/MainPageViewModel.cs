@@ -17,6 +17,7 @@ using System.Net.Http;
 using XFWebviewLib.Infrastructure;
 using Acr.UserDialogs;
 using XFWebviewLib.Model;
+using Prism.Events;
 
 namespace XFWebviewLib.ViewModels
 {
@@ -25,6 +26,7 @@ namespace XFWebviewLib.ViewModels
         #region fields
         appfunc _appfunc;
         AppFunDAO _appfunc_db;
+        private readonly IEventAggregator _eventAggregator;
         #endregion
 
         #region Propertys
@@ -82,7 +84,7 @@ namespace XFWebviewLib.ViewModels
         {
             try
             {
-                await NavigationService.NavigateAsync("test2Page").ConfigureAwait(false);
+                await NavigationService.NavigateAsync("test2Page");
 
             }
             catch (Exception ex)
@@ -93,12 +95,31 @@ namespace XFWebviewLib.ViewModels
         }
         #endregion
 
-        public MainPageViewModel(INavigationService navigationService)
+        public MainPageViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
             : base(navigationService)
         {
             Title = "Main Page";
             AppFuncObj = appfunc_db.ReadByName("首頁");
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<WebViewtoVmEvent>().Subscribe(x =>
+            {
+                if (!string.IsNullOrEmpty(x.Message))
+                {
+                    try
+                    {
+                        Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            await NavigationService.NavigateAsync("test2Page");
+                        });
 
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw;
+                    }
+                }
+            });
         }
 
         public async void DownloadAppFuncFileAsync(string FloderName, string MutiFileName)
@@ -170,6 +191,7 @@ namespace XFWebviewLib.ViewModels
         {
             //DownloadAppFuncFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_files);
         }
+
 
     }
 }

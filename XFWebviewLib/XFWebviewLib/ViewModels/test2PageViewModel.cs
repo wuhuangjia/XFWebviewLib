@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Xamarin.Forms;
 using XFWebviewLib.DAO;
 using XFWebviewLib.Helper;
 using XFWebviewLib.Infrastructure;
@@ -22,6 +21,7 @@ namespace XFWebviewLib.ViewModels
         #region fields
         appfunc _appfunc;
         AppFunDAO _appfunc_db;
+        IFloderPath _FloderPath;
         #endregion
 
         #region Propertys
@@ -90,10 +90,11 @@ namespace XFWebviewLib.ViewModels
         }
         #endregion
 
-        public test2PageViewModel(INavigationService navigationService)
+        public test2PageViewModel(INavigationService navigationService, IFloderPath FloderPath)
             : base(navigationService)
         {
             Title = "Main Page";
+            _FloderPath = FloderPath;
             AppFuncObj = appfunc_db.ReadByName("首頁");
 
         }
@@ -137,7 +138,7 @@ namespace XFWebviewLib.ViewModels
 
             if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
             {
-                Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
+                Baseurl = _FloderPath.GetTempDirectory();
                 var flist = folder.GetFilesAsync();
                 string tmppath = Baseurl;
                 IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
@@ -148,7 +149,7 @@ namespace XFWebviewLib.ViewModels
             }
             else
             {
-                Baseurl = $"file://{DependencyService.Get<IFloderPath>().GetPath(Environment.SpecialFolder.Personal, AppFuncObj.appfunc_id)}/";
+                Baseurl = $"file://{_FloderPath.GetPath(Environment.SpecialFolder.Personal, AppFuncObj.appfunc_id)}/";
             }
             PageTemplate = await Utilities.ReadFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_url);
 
