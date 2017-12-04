@@ -7,19 +7,37 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using XFWebviewLib.Helper;
+using XFWebviewLib.Model;
 
 namespace XFWebviewLib.ViewModels
 {
     public class ViewModelBase : BindableBase, INavigationAware, IDestructible
     {
+        #region Fields
         protected INavigationService NavigationService { get; private set; }
+        #endregion
 
-        private string _title;
-        public string Title
+        #region Propertys
+        public string Title { get; set; }
+        public bool IsServerAvailable { get; set; }
+
+        public bool IsSync { get; set; }
+
+        private List<syncapp> _tempsyncapplist;
+
+        public List<syncapp> TempSyncAppList
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get {
+                if(_tempsyncapplist == null)
+                {
+                    _tempsyncapplist = new List<syncapp>();
+                }
+                return _tempsyncapplist; }
+            set { _tempsyncapplist = value; }
         }
+
+        #endregion
 
         public ViewModelBase(INavigationService navigationService)
         {
@@ -68,7 +86,6 @@ namespace XFWebviewLib.ViewModels
         }
         #endregion
 
-
         #region 檢查是否可以定位
         protected bool IsLocationAvailable()
         {
@@ -82,6 +99,10 @@ namespace XFWebviewLib.ViewModels
                 return false;
             }
         }
+        #endregion
+
+        #region 檢查頁面是否過期
+
         #endregion
 
     }

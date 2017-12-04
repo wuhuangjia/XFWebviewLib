@@ -129,6 +129,9 @@
     <PackageReference Include="DynamicWrapLayout">
       <Version>2017.11.30.2</Version>
     </PackageReference>
+    <PackageReference Include="modernhttpclient">
+      <Version>2.4.2</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>
     </PackageReference>

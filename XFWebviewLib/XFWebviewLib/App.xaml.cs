@@ -23,7 +23,7 @@ namespace XFWebviewLib
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            await NavigationService.NavigateAsync("NavigationPage/SplashPage");
         }
 
         protected override void RegisterTypes()
@@ -31,6 +31,7 @@ namespace XFWebviewLib
             Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<test2Page>();
+            Container.RegisterTypeForNavigation<SplashPage>();
         }
     }
 }

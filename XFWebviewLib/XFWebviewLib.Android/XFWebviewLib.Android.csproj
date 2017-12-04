@@ -63,6 +63,9 @@
     <PackageReference Include="DynamicWrapLayout">
       <Version>2017.11.30.2</Version>
     </PackageReference>
+    <PackageReference Include="modernhttpclient">
+      <Version>2.4.2</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>
     </PackageReference>
@@ -95,6 +98,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\DatabaseConnection.cs" />
     <Compile Include="Service\FloderPath.cs" />
+    <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -124,6 +128,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CustomRenderer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splash.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\talkok_bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

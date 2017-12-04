@@ -1,8 +1,12 @@
 ﻿using Acr.UserDialogs;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using PCLStorage;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,6 +16,14 @@ namespace XFWebviewLib.Helper
 {
     public static class Utilities
     {
+
+        public static HttpClient GetClient()
+        {
+            HttpClient client = new HttpClient(new ModernHttpClient.NativeMessageHandler());
+            client.DefaultRequestHeaders.Accept.Clear();
+            return client;
+        }
+
         #region 將點擊圖片加上放大縮小動畫，預設 CubicInOut + BounceOut，須放置於 Code Behiend
         /// <summary>
         /// 取得動畫的效果
@@ -122,6 +134,40 @@ namespace XFWebviewLib.Helper
             }
 
             return canExecute;
+        }
+        #endregion
+
+        #region MyRegion
+        public static async Task<string> GetStringUsePostByUrlAsync(string RequestUrl, List<KeyValuePair<String, String>> Parameters = null)
+        {
+            using (HttpClient client = GetClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                HttpResponseMessage httpResponseMessage;
+                if (Parameters != null)
+                {
+                    httpResponseMessage = await client.PostAsync(RequestUrl, new FormUrlEncodedContent(Parameters));
+                }
+                else
+                {
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, RequestUrl);
+                    request.Content = new StringContent(string.Empty, Encoding.UTF8, "plain/text");
+                    httpResponseMessage = await client.SendAsync(request);
+                }
+                httpResponseMessage.EnsureSuccessStatusCode();
+                string content = await httpResponseMessage.Content.ReadAsStringAsync();
+                return content;
+            }
+        }
+        public static async Task<string> GetStringUseGetByUrlAsync(string RequestUrl)
+        {
+            using (HttpClient client = GetClient())
+            {
+                HttpResponseMessage httpResponseMessage = await client.GetAsync(RequestUrl);
+                httpResponseMessage.EnsureSuccessStatusCode();
+                string content = await httpResponseMessage.Content.ReadAsStringAsync();
+                return content;
+            }
         }
         #endregion
 
