@@ -21,7 +21,6 @@ namespace XFWebviewLib.ViewModels
         #region fields
         appfunc _appfunc;
         AppFunDAO _appfunc_db;
-        IFloderPath _FloderPath;
         #endregion
 
         #region Propertys
@@ -90,68 +89,11 @@ namespace XFWebviewLib.ViewModels
         }
         #endregion
 
-        public test2PageViewModel(INavigationService navigationService, IFloderPath FloderPath)
-            : base(navigationService)
+        public test2PageViewModel(INavigationService navigationService, IFolderPath floderpath)
+            : base(navigationService, floderpath)
         {
             Title = "Main Page";
-            _FloderPath = FloderPath;
             AppFuncObj = appfunc_db.ReadByName("首頁");
-
-        }
-
-        public async void DownloadAppFuncFileAsync(string FloderName, string MutiFileName)
-        {
-            var listfile = new List<string>(MutiFileName.Split(','));
-
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
-
-            listfile.ForEach(async filename =>
-            {
-                IFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-
-                using (var fooFileStream = await file.OpenAsync(PCLStorage.FileAccess.ReadAndWrite))
-                {
-                    using (HttpClientHandler handle = new HttpClientHandler())
-                    {
-                        // 建立 HttpClient 物件
-                        using (HttpClient client = new HttpClient(handle))
-                        {
-                            // 取得指定 URL 的 Stream
-                            var url = $"{AppData.WebBaseUrl}files/appfunc_id/{FloderName}/{filename}";
-                            using (var fooStream = await client.GetStreamAsync(url))
-                            {
-                                // 將網路的檔案 Stream 複製到本機檔案上
-                                fooStream.CopyTo(fooFileStream);
-                            }
-                        }
-                    }
-                }
-            });
-
-        }
-
-        public async void InitAppfuncHtmlAsync()
-        {
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync(AppFuncObj.appfunc_id, CreationCollisionOption.OpenIfExists);
-
-            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
-            {
-                Baseurl = _FloderPath.GetTempDirectory();
-                var flist = folder.GetFilesAsync();
-                string tmppath = Baseurl;
-                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-                flist.Result.ToList().ForEach(f =>
-                {
-                    PCLStorageExtensions.CopyFileTo(f, targetfloder);
-                });
-            }
-            else
-            {
-                Baseurl = $"file://{_FloderPath.GetPath(Environment.SpecialFolder.Personal, AppFuncObj.appfunc_id)}/";
-            }
-            PageTemplate = await Utilities.ReadFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_url);
 
         }
 
@@ -160,7 +102,7 @@ namespace XFWebviewLib.ViewModels
             using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
             {
 
-                InitAppfuncHtmlAsync();
+                //InitAppfuncHtmlAsync();
             }
         }
 

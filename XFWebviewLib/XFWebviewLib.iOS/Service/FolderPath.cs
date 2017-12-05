@@ -3,19 +3,19 @@ using System.IO;
 using XFWebviewLib.Interface;
 using XFWebviewLib.iOS.Service;
 
-[assembly: Xamarin.Forms.Dependency(typeof(FloderPath))]
+[assembly: Xamarin.Forms.Dependency(typeof(FolderPath))]
 namespace XFWebviewLib.iOS.Service
 {
-    public class FloderPath : IFloderPath
+    public class FolderPath : IFolderPath
     {
-        public FloderPath()
+        public FolderPath()
         {
         }
        
-        public string GetPath(Environment.SpecialFolder SpecialFloder, string FloderName)
+        public string GetPath(Environment.SpecialFolder SpecialFolder, string FolderName)
         {
-            string personalFolder = System.Environment.GetFolderPath(SpecialFloder);
-            var path = Path.Combine(personalFolder, FloderName);
+            string personalFolder = System.Environment.GetFolderPath(SpecialFolder);
+            var path = Path.Combine(personalFolder, FolderName);
             return path;
         }
 

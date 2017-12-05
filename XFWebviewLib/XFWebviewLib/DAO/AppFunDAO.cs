@@ -43,7 +43,7 @@ namespace XFWebviewLib.DAO
             }
         }
 
-        private int Create(appfunc entity)
+        public int Create(appfunc entity)
         {
             lock (collisionLock)
             {
@@ -51,7 +51,7 @@ namespace XFWebviewLib.DAO
             }
         }
 
-        private int Update(appfunc entity)
+        public int Update(appfunc entity)
         {
             lock (collisionLock)
             {

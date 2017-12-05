@@ -18,6 +18,8 @@ using XFWebviewLib.Infrastructure;
 using Acr.UserDialogs;
 using XFWebviewLib.Model;
 using Prism.Events;
+using Xam.Plugin.WebView.Abstractions;
+using Xam.Plugin.WebView.Abstractions.Enumerations;
 
 namespace XFWebviewLib.ViewModels
 {
@@ -25,39 +27,13 @@ namespace XFWebviewLib.ViewModels
     {
         #region fields
         appfunc _appfunc;
+        syncapp _syncapp;
+        SyncAppDAO _syncapp_db;
         AppFunDAO _appfunc_db;
         private readonly IEventAggregator _eventAggregator;
         #endregion
 
         #region Propertys
-        public string PageTemplate
-        {
-            get;
-            set;
-        }
-
-        public string Baseurl
-        {
-            get;
-            set;
-        }
-
-        public appfunc AppFuncObj
-        {
-            get
-            {
-                if (_appfunc == null)
-                {
-                    _appfunc = new appfunc();
-                }
-                return _appfunc;
-            }
-            set
-            {
-                _appfunc = value;
-            }
-        }
-
 
         public AppFunDAO appfunc_db
         {
@@ -72,7 +48,23 @@ namespace XFWebviewLib.ViewModels
             set { _appfunc_db = value; }
         }
 
+        public SyncAppDAO syncapp_db
+        {
+            get
+            {
+                if (_syncapp_db == null)
+                {
+                    _syncapp_db = new SyncAppDAO();
+                }
+                return _syncapp_db;
+            }
+            set { _syncapp_db = value; }
+        }
+
         public string NaviUrl { get; set; }
+        public WebViewContentType wvContentType { get; set; }
+        public string wvSource { get; set; }
+        public string wvBaseurl { get; set; }
         #endregion
 
         #region Command
@@ -95,52 +87,70 @@ namespace XFWebviewLib.ViewModels
         }
         #endregion
 
-        public MainPageViewModel(INavigationService navigationService)
-            : base(navigationService)
+        public MainPageViewModel(INavigationService navigationService, IFolderPath floderpath)
+            : base(navigationService, floderpath)
         {
             Title = "Main Page";
-            AppFuncObj = appfunc_db.ReadByName("首頁");
+            _syncapp = syncapp_db.ReadByTableName("appfunc", "");
+            _appfunc = appfunc_db.ReadByName("首頁");
         }
 
 
-        public async void InitAppfuncHtmlAsync()
-        {
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync(AppFuncObj.appfunc_id, CreationCollisionOption.OpenIfExists);
-
-            if (CrossDeviceInfo.Current.Platform == Plugin.DeviceInfo.Abstractions.Platform.iOS)
-            {
-                Baseurl = DependencyService.Get<IFloderPath>().GetTempDirectory();
-                var flist = folder.GetFilesAsync();
-                string tmppath = Baseurl;
-                IFolder targetfloder = await FileSystem.Current.GetFolderFromPathAsync(tmppath);
-                flist.Result.ToList().ForEach( f =>
-                {                    
-                    PCLStorageExtensions.CopyFileTo(f, targetfloder);
-                });
-            }
-            else
-            {
-                Baseurl = $"file://{DependencyService.Get<IFloderPath>().GetPath(Environment.SpecialFolder.Personal, AppFuncObj.appfunc_id)}/";
-            }
-            PageTemplate = await Utilities.ReadFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_url);
-
-        }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
             using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
             {
-
-                //InitAppfuncHtmlAsync();
+                InitAppfuncHtmlAsync();
             }
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            //DownloadAppFuncFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_files);
+            if (parameters.ContainsKey("TempSyncAppList"))
+            {
+                TempSyncAppList = (List<syncapp>)parameters["TempSyncAppList"];
+            }
         }
 
+        public async void InitAppfuncHtmlAsync()
+        {
+            if (_syncapp != null)
+            {
+                var remote = TempSyncAppList.FirstOrDefault(x => x.syncapp_table == _syncapp.syncapp_table && x.syncapp_filter == _syncapp.syncapp_filter);
+                if (remote.update_date > _syncapp.update_date)
+                {
+                    //如果遠端的更新日期大於本地端，則由網路取得並且緩存一份在本地
+                    //切換webview為internet
+                    wvContentType = WebViewContentType.Internet;
+                    wvSource = $"{AppData.WebBaseUrl}files/appfunc_id/{_appfunc.appfunc_id}/{_appfunc.appfunc_url}";
+                    DownloadAppFuncFileAsync(_appfunc.appfunc_id, _appfunc.appfunc_files, wvSource);
+                    _syncapp.update_date = remote.update_date;
+                    syncapp_db.Update(_syncapp);
+                }
+                else
+                {
+                    //讀取本地緩存頁面
+                    wvContentType = WebViewContentType.StringData;
+                    wvBaseurl = await GetBaseurlAsync(_appfunc.appfunc_id, _appfunc.appfunc_url);
+                    wvSource = await GetAppfuncHtmlAsync(_appfunc.appfunc_id, _appfunc.appfunc_url);
+                }
+            }
+            else
+            {
+                //_syncapp如果是null，表示這個功能還沒有緩存過，必須從網路取得
+
+                //切換webview為internet
+                wvContentType = WebViewContentType.Internet;
+                wvSource = $"{AppData.WebBaseUrl}files/appfunc_id/{_appfunc.appfunc_id}/{_appfunc.appfunc_url}";
+                var NoFileNameWebUrl = $"{AppData.WebBaseUrl}files/appfunc_id/{_appfunc.appfunc_id}/";
+                DownloadAppFuncFileAsync(_appfunc.appfunc_id, _appfunc.appfunc_files, NoFileNameWebUrl);
+                var remote = TempSyncAppList.FirstOrDefault(x => x.syncapp_table == "appfunc");
+                syncapp_db.Create(remote);
+
+            }
+
+        }
 
     }
 }

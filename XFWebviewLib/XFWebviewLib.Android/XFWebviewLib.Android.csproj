@@ -97,7 +97,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\DatabaseConnection.cs" />
-    <Compile Include="Service\FloderPath.cs" />
+    <Compile Include="Service\FolderPath.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>

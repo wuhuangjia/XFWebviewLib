@@ -25,10 +25,10 @@
         <webview:FormsWebView
             x:Name="hybridWebView"
             Grid.Row="1"
-            BaseUrl="{Binding Baseurl}"
-            ContentType="StringData"
+            BaseUrl="{Binding wvBaseurl}"
+            ContentType="{Binding wvContentType}"
             HorizontalOptions="FillAndExpand"
-            Source="{Binding PageTemplate}"
+            Source="{Binding wvSource}"
             VerticalOptions="FillAndExpand" />
         <StackLayout
             Grid.Row="2"

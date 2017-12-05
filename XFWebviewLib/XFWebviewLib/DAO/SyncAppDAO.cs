@@ -25,7 +25,7 @@ namespace XFWebviewLib.DAO
             db.CreateTable<syncapp>();
         }
 
-        private int Create(syncapp entity)
+        public int Create(syncapp entity)
         {
             lock (collisionLock)
             {
@@ -33,7 +33,7 @@ namespace XFWebviewLib.DAO
             }
         }
 
-        private int Update(syncapp entity)
+        public int Update(syncapp entity)
         {
             lock (collisionLock)
             {
@@ -57,6 +57,14 @@ namespace XFWebviewLib.DAO
             lock (collisionLock)
             {
                 return db.Table<syncapp>().FirstOrDefault(x => x.syncapp_id == PK);
+            }
+        }
+
+        public syncapp ReadByTableName(string TableName, string Filter="")
+        {
+            lock (collisionLock)
+            {
+                return db.Table<syncapp>().FirstOrDefault(x => x.syncapp_table == TableName && x.syncapp_filter == Filter);
             }
         }
 

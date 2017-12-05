@@ -13,6 +13,7 @@ using XFWebviewLib.Infrastructure;
 using XFWebviewLib.Model;
 using Newtonsoft.Json;
 using XFWebviewLib.DAO;
+using XFWebviewLib.Interface;
 
 namespace XFWebviewLib.ViewModels
 {
@@ -39,7 +40,8 @@ namespace XFWebviewLib.ViewModels
 
         #endregion
 
-        public SplashPageViewModel(INavigationService navigationService) : base(navigationService)
+        public SplashPageViewModel(INavigationService navigationService, IFolderPath floderpath)
+         : base(navigationService, floderpath)
         {
 
         }
@@ -90,7 +92,10 @@ namespace XFWebviewLib.ViewModels
                         });
                         #endregion
 
-                        await NavigationService.NavigateAsync("app:///NavigationPage/MainPage");
+                        //進入主選單
+                        var navpara = new NavigationParameters();
+                        navpara.Add("TempSyncAppList", TempSyncAppList);
+                        await NavigationService.NavigateAsync("app:///NavigationPage/MainPage", navpara);
                     }
                 }
             }

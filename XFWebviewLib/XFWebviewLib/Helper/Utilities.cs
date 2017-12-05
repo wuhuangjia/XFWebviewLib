@@ -97,18 +97,19 @@ namespace XFWebviewLib.Helper
         #endregion
 
         #region 傳入資料夾及檔名，回傳字串
-        public static async Task<string> ReadFileAsync(string FloderName, string FileName)
+        public static async Task<string> ReadFileAsync(string FolderPath, string FileName)
         {
             string result = string.Empty;
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
-            var e = await folder.CheckExistsAsync(FileName);
-            if (e == ExistenceCheckResult.FileExists)
+            IFolder folder = await FileSystem.Current.GetFolderFromPathAsync(FolderPath);
+            if (!string.IsNullOrEmpty(FolderPath))
             {
-
-                IFile file = await folder.GetFileAsync(FileName);
-                FileInfo finfo = new FileInfo(file.Path);
-                result = await file.ReadAllTextAsync();
+                var e = await folder.CheckExistsAsync(FileName);
+                if (e == ExistenceCheckResult.FileExists)
+                {
+                    IFile file = await folder.GetFileAsync(FileName);
+                    FileInfo finfo = new FileInfo(file.Path);
+                    result = await file.ReadAllTextAsync();
+                }
             }
 
             return result;
@@ -137,7 +138,7 @@ namespace XFWebviewLib.Helper
         }
         #endregion
 
-        #region MyRegion
+        #region 通過POST取得網址文字內容
         public static async Task<string> GetStringUsePostByUrlAsync(string RequestUrl, List<KeyValuePair<String, String>> Parameters = null)
         {
             using (HttpClient client = GetClient())
@@ -159,6 +160,9 @@ namespace XFWebviewLib.Helper
                 return content;
             }
         }
+        #endregion
+
+        #region 通過GET取得網址文字內容
         public static async Task<string> GetStringUseGetByUrlAsync(string RequestUrl)
         {
             using (HttpClient client = GetClient())
@@ -170,6 +174,7 @@ namespace XFWebviewLib.Helper
             }
         }
         #endregion
+
 
     }
 }
