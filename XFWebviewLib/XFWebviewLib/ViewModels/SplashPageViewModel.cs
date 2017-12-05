@@ -92,11 +92,11 @@ namespace XFWebviewLib.ViewModels
                         });
                         #endregion
 
-                        //進入主選單
-                        var navpara = new NavigationParameters();
-                        navpara.Add("TempSyncAppList", TempSyncAppList);
-                        await NavigationService.NavigateAsync("app:///NavigationPage/MainPage", navpara);
                     }
+                    //進入主選單
+                    var navpara = new NavigationParameters();
+                    navpara.Add("TempSyncAppList", TempSyncAppList);
+                    await NavigationService.NavigateAsync("app:///NavigationPage/MainPage", navpara);
                 }
             }
             catch (Exception ex)
