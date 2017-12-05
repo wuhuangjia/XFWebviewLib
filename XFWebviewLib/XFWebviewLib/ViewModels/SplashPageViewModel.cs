@@ -40,23 +40,37 @@ namespace XFWebviewLib.ViewModels
 
         #endregion
 
+        #region Command
+        private DelegateCommand _Navitotest2;
+        public DelegateCommand Navitotest2Command =>
+            _Navitotest2 ?? (_Navitotest2 = new DelegateCommand(ExecuteNavitotest2Command));
+
+        async void ExecuteNavitotest2Command()
+        {
+            try
+            {
+                await NavigationService.NavigateAsync("test2Page");
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
         public SplashPageViewModel(INavigationService navigationService, IFolderPath floderpath)
          : base(navigationService, floderpath)
         {
-
         }
 
 
-        public override void OnNavigatingTo(NavigationParameters parameters)
-        {
-        }
-        public async override void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatingTo(NavigationParameters parameters)
         {
             #region 1.檢查是否可以連上桃園
             try
             {
-                using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
-                {
                     IsServerAvailable = await IsHostConnectAvailable(AppData.WebBaseUrl);
                     if (IsServerAvailable)
                     {
@@ -93,9 +107,23 @@ namespace XFWebviewLib.ViewModels
                         #endregion
 
                     }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            #endregion
+        }
+        public async override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            try
+            {
+                using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
+                {
                     //進入主選單
                     var navpara = new NavigationParameters();
                     navpara.Add("TempSyncAppList", TempSyncAppList);
+                    await Task.Delay(1);
                     await NavigationService.NavigateAsync("app:///NavigationPage/MainPage", navpara);
                 }
             }
@@ -106,41 +134,11 @@ namespace XFWebviewLib.ViewModels
                 UserDialogs.Instance.Toast(toastConfig);
             }
 
-            #endregion
-
         }
-        public async void DownloadAppFuncFileAsync(string FloderName, string MutiFileName)
+
+        public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            var listfile = new List<string>(MutiFileName.Split(','));
-
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync(FloderName, CreationCollisionOption.OpenIfExists);
-
-            listfile.ForEach(async filename =>
-            {
-                IFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-
-                using (var fooFileStream = await file.OpenAsync(PCLStorage.FileAccess.ReadAndWrite))
-                {
-                    using (HttpClientHandler handle = new HttpClientHandler())
-                    {
-                        // 建立 HttpClient 物件
-                        using (HttpClient client = new HttpClient(handle))
-                        {
-                            // 取得指定 URL 的 Stream
-                            //var url = $"{AppData.WebBaseUrl}files/appfunc_id/{FloderName}/{filename}";
-                            var url = "https://card.tycg.gov.tw/ap_mobile/index.aspx";
-                            using (var fooStream = await client.GetStreamAsync(url))
-                            {
-                                // 將網路的檔案 Stream 複製到本機檔案上
-                                fooStream.CopyTo(fooFileStream);
-                            }
-                        }
-                    }
-                }
-            });
 
         }
-
     }
 }

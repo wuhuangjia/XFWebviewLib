@@ -101,7 +101,6 @@ namespace XFWebviewLib.ViewModels
         {
             using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
             {
-                InitAppfuncHtmlAsync();
             }
         }
 
@@ -111,6 +110,7 @@ namespace XFWebviewLib.ViewModels
             {
                 TempSyncAppList = (List<syncapp>)parameters["TempSyncAppList"];
             }
+                InitAppfuncHtmlAsync();
         }
 
         public async void InitAppfuncHtmlAsync()
@@ -118,23 +118,24 @@ namespace XFWebviewLib.ViewModels
             if (_syncapp != null)
             {
                 var remote = TempSyncAppList.FirstOrDefault(x => x.syncapp_table == _syncapp.syncapp_table && x.syncapp_filter == _syncapp.syncapp_filter);
-                if (remote.update_date > _syncapp.update_date)
+                if (remote != null)
                 {
-                    //如果遠端的更新日期大於本地端，則由網路取得並且緩存一份在本地
-                    //切換webview為internet
-                    wvContentType = WebViewContentType.Internet;
-                    wvSource = $"{AppData.WebBaseUrl}files/appfunc_id/{_appfunc.appfunc_id}/{_appfunc.appfunc_url}";
-                    DownloadAppFuncFileAsync(_appfunc.appfunc_id, _appfunc.appfunc_files, wvSource);
-                    _syncapp.update_date = remote.update_date;
-                    syncapp_db.Update(_syncapp);
+                    if (remote.update_date > _syncapp.update_date)
+                    {
+                        //如果遠端的更新日期大於本地端，則由網路取得並且緩存一份在本地
+                        //切換webview為internet
+                        wvContentType = WebViewContentType.Internet;
+                        wvSource = $"{AppData.WebBaseUrl}files/appfunc_id/{_appfunc.appfunc_id}/{_appfunc.appfunc_url}";
+                        DownloadAppFuncFileAsync(_appfunc.appfunc_id, _appfunc.appfunc_files, wvSource);
+                        _syncapp.update_date = remote.update_date;
+                        syncapp_db.Update(_syncapp);
+                        return;
+                    }
                 }
-                else
-                {
-                    //讀取本地緩存頁面
-                    wvContentType = WebViewContentType.StringData;
-                    wvBaseurl = await GetBaseurlAsync(_appfunc.appfunc_id, _appfunc.appfunc_url);
-                    wvSource = await GetAppfuncHtmlAsync(_appfunc.appfunc_id, _appfunc.appfunc_url);
-                }
+                //讀取本地緩存頁面
+                wvContentType = WebViewContentType.StringData;
+                wvBaseurl = await GetBaseurlAsync(_appfunc.appfunc_id, _appfunc.appfunc_url);
+                wvSource = await GetAppfuncHtmlAsync(_appfunc.appfunc_id, _appfunc.appfunc_url);
             }
             else
             {

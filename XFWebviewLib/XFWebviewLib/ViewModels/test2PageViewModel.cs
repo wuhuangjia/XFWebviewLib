@@ -101,14 +101,17 @@ namespace XFWebviewLib.ViewModels
         {
             using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
             {
-
-                //InitAppfuncHtmlAsync();
+                PageTemplate= @"
+<!doctype html>
+<html>
+    <body><h1>This is a HTML string</h1></body>
+</html>
+            ";
             }
         }
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            //DownloadAppFuncFileAsync(AppFuncObj.appfunc_id, AppFuncObj.appfunc_files);
         }
     }
 }

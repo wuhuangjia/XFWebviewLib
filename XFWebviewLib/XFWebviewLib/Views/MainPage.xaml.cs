@@ -23,7 +23,6 @@ namespace XFWebviewLib.Views
             InitializeComponent();
             _MainPageViewModel = this.BindingContext as MainPageViewModel;
             _ea = eventAggregator;
-            this.hybridWebView.AddLocalCallback("navitotest2", navitotest2);
         }
 
         void  navitotest2(string obj)

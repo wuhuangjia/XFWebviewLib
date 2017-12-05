@@ -14,7 +14,7 @@
             Grid.Row="0"
             HorizontalOptions="CenterAndExpand"
             VerticalOptions="CenterAndExpand">
-            <Image Source="logo.png" />
+            <Button Command="{Binding Navitotest2Command}" Text="navi to test2" />
         </StackLayout>
     </Grid>
 

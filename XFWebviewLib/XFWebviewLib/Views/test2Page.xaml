@@ -22,7 +22,6 @@
         <webview:FormsWebView
             x:Name="hybridWebView"
             Grid.Row="1"
-            BaseUrl="{Binding Baseurl}"
             ContentType="StringData"
             HorizontalOptions="FillAndExpand"
             Source="{Binding PageTemplate}"
