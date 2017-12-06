@@ -49,7 +49,7 @@ namespace XFWebviewLib.ViewModels
         {
             try
             {
-                await NavigationService.NavigateAsync("test2Page");
+                await NavigationService.NavigateAsync("app:///NavigationPage/MainPage");
 
             }
             catch (Exception ex)
@@ -118,20 +118,14 @@ namespace XFWebviewLib.ViewModels
         {
             try
             {
-                using (UserDialogs.Instance.Loading("與伺服器連線中...", null, null, true, MaskType.Black))
-                {
-                    //進入主選單
-                    var navpara = new NavigationParameters();
-                    navpara.Add("TempSyncAppList", TempSyncAppList);
-                    await Task.Delay(1);
-                    await NavigationService.NavigateAsync("app:///NavigationPage/MainPage", navpara);
-                }
+                //進入主選單
+                var navpara = new NavigationParameters();
+                navpara.Add("TempSyncAppList", TempSyncAppList);
+                await Task.Yield();
+                await NavigationService.NavigateAsync("app:///NavigationPage/MainPage", navpara);
             }
             catch (Exception ex)
             {
-                var toastConfig = new ToastConfig("目前主機無法連線，請稍後再試");
-                toastConfig.SetDuration(3000);
-                UserDialogs.Instance.Toast(toastConfig);
             }
 
         }

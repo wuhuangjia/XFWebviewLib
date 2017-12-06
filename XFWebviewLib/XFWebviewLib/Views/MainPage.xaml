@@ -6,7 +6,7 @@
     xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
     xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
     xmlns:webview="clr-namespace:Xam.Plugin.WebView.Abstractions;assembly=Xam.Plugin.WebView.Abstractions"
-    Title="{Binding Title}"
+    Title="Main"
     prism:ViewModelLocator.AutowireViewModel="True"
     NavigationPage.HasNavigationBar="False">
     <Grid>
@@ -20,7 +20,7 @@
             BackgroundColor="Cyan"
             HorizontalOptions="CenterAndExpand"
             VerticalOptions="CenterAndExpand">
-            <Label Text="頁首" />
+            <Label Text="Main" />
         </StackLayout>
         <webview:FormsWebView
             x:Name="hybridWebView"
