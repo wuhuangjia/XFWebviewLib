@@ -13,8 +13,10 @@ namespace XFWebviewLib.Model
         public string appfunc_type { get; set; }
         public string appfunc_name { get; set; }
         public string appfunc_url { get; set; }
-        public int appfunc_order { get; set; }
+        public string appfunc_order { get; set; }
         public string appfunc_isactive { get; set; }
+        public string appfunc_iscache { get; set; }
+        public string appfunc_isbrowser { get; set; }
         public string appfunc_files { get; set; }
         public DateTime create_date { get; set; }
         public string create_user { get; set; }

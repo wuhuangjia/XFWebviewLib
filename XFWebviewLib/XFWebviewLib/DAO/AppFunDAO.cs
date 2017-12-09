@@ -34,7 +34,7 @@ namespace XFWebviewLib.DAO
                 o.appfunc_type = "webview";
                 o.appfunc_name = "首頁";
                 o.appfunc_url = "mainpage.html";
-                o.appfunc_order = 0;
+                o.appfunc_order = "0";
                 o.appfunc_isactive = "1";
                 o.appfunc_files = "mainpage.html,style.css";
                 o.update_date = DateTime.Now;
